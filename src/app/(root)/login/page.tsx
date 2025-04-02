@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,8 +12,45 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { login, signInWithGoogle, signup } from "@/lib/actions/user.actions";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+	const router = useRouter(); // Add this
+
+	const handleLogin = async (formdata: FormData) => {
+		try {
+			console.log("Loggin In");
+			const { success, message } = await login(formdata);
+			if (!success) throw new Error(message);
+			toast.success("Success");
+			router.push("/dashboard"); // Use router.push instead of redirect
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	const handleSignUp = async (formdata: FormData) => {
+		try {
+			const { success, message } = await signup(formdata);
+			if (!success) throw new Error(message);
+			toast.success("Success");
+			router.push("/login"); // Use router.push instead of redirect
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	const handleSignUpGoogle = async () => {
+		try {
+			const { success, message } = await signInWithGoogle();
+			if (!success) throw new Error(message);
+			router.push("/dashboard"); // Use router.push instead of redirect
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
 			<Card className="w-full max-w-md">
@@ -57,7 +95,7 @@ export default function LoginPage() {
 								<Button
 									type="submit"
 									className="w-full"
-									formAction={login}
+									formAction={handleLogin}
 								>
 									Login
 								</Button>
@@ -90,7 +128,7 @@ export default function LoginPage() {
 								<Button
 									type="submit"
 									className="w-full"
-									formAction={signup}
+									formAction={handleSignUp}
 								>
 									Create account
 								</Button>
@@ -115,7 +153,7 @@ export default function LoginPage() {
 								type="submit"
 								variant="outline"
 								className="w-full"
-								onClick={signInWithGoogle}
+								onClick={handleSignUpGoogle}
 							>
 								<svg
 									className="mr-2 h-4 w-4"

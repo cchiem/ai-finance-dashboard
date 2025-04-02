@@ -1,8 +1,7 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "../../../utils/supabase/server";
+import { createClient } from "utils/supabase/server";
 
 // Helper function to validate email and password
 function validateCredentials(email: unknown, password: unknown) {
@@ -31,20 +30,17 @@ export async function login(formData: FormData) {
 		redirect("/error");
 	}
 
-	const { data, error } = await supabase.auth.signInWithPassword({
+	const { error } = await supabase.auth.signInWithPassword({
 		email,
 		password,
 	});
 
 	if (error) {
 		console.error(error.message);
-		redirect("/error");
+		return { success: false, message: "Failed to Log In" };
 	}
 
-	console.log(data);
-
-	revalidatePath("/", "layout");
-	redirect("/dashboard");
+	return { success: true, message: "Sucessfully Logged In" };
 }
 
 export async function signup(formData: FormData) {
@@ -59,25 +55,22 @@ export async function signup(formData: FormData) {
 		redirect("/error");
 	}
 
-	const { data, error } = await supabase.auth.signUp({
+	const { error } = await supabase.auth.signUp({
 		email,
 		password,
 	});
 
 	if (error) {
-		console.error(error.message);
-		redirect("/error");
+		return { success: false, message: "Failed to Sign In" };
 	}
-	console.log(data);
 
-	revalidatePath("/", "layout");
-	redirect("/login");
+	return { success: true, message: "Sucessfully Signed Up" };
 }
 
 export async function signInWithGoogle() {
 	const supabase = await createClient();
 
-	const { data, error } = await supabase.auth.signInWithOAuth({
+	const { error } = await supabase.auth.signInWithOAuth({
 		provider: "google",
 		options: {
 			redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
@@ -86,10 +79,10 @@ export async function signInWithGoogle() {
 
 	if (error) {
 		console.error(error.message);
-		redirect("/error");
+		return { success: false, message: "Failed to Sign In with Google" };
 	}
 
-	return { data };
+	return { success: true, message: "Sucessfully Signed In with Google" };
 }
 
 export async function logout() {
@@ -99,10 +92,18 @@ export async function logout() {
 
 	if (error) {
 		console.error(error.message);
-		redirect("/error");
+		return { success: false, message: "Failed to sign out" };
 	}
 
-	window.location.reload(); // Refresh the page
-	revalidatePath("/", "layout");
-	redirect("/");
+	return { success: true, message: "Sucessfully Signed Out" };
+}
+
+export async function getLoggedInUser() {
+	const supabase = await createClient();
+	const {
+		data: { user },
+	} = await supabase.auth.getUser();
+
+	if (!user) return null;
+	return user;
 }

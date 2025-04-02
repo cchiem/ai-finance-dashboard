@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { User, LogOut, PiggyBank } from "lucide-react";
@@ -12,34 +11,16 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { logout } from "@/lib/actions/user.actions";
-import { createClient } from "utils/supabase/client";
 
-export default function Header() {
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
-	const [user, setUser] = useState<unknown>(null);
-	const [isLoading, setIsLoading] = useState(true);
+type HeaderProps = {
+	user: UserType | null;
+};
+
+export default function Header({ user }: HeaderProps) {
 	const pathname = usePathname();
 
-	useEffect(() => {
-		async function getUser() {
-			setIsLoading(true);
-			const supabase = createClient();
-			const {
-				data: { user },
-			} = await supabase.auth.getUser();
-			setUser(user);
-			setIsLoading(false);
-		}
-
-		getUser();
-	}, []);
-
-	const toggleMenu = () => {
-		setIsMenuOpen(!isMenuOpen);
-	};
-
-	const closeMenu = () => {
-		setIsMenuOpen(false);
+	const handleLogout = async () => {
+		await logout();
 	};
 
 	const navItems = [
@@ -51,8 +32,8 @@ export default function Header() {
 
 	return (
 		<header className="sticky flex justify-center top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-			<div className="flex h-16 min-w-5xl justify-between">
-				<div className="flex items-center gap-2">
+			<div className="flex h-16 min-w-5xl justify-between ">
+				<div className="flex items-center gap-2 w-40">
 					<Link href="/" className="flex items-center space-x-2">
 						<span className="text-xl font-bold">
 							<PiggyBank />
@@ -79,9 +60,7 @@ export default function Header() {
 
 				{/* Auth Buttons - Desktop */}
 				<div className="flex items-center gap-4">
-					{isLoading ? (
-						<div className="h-9 w-20 bg-muted animate-pulse rounded-md"></div>
-					) : user ? (
+					{user ? (
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<Button
@@ -103,7 +82,10 @@ export default function Header() {
 									<Link href="/settings">Settings</Link>
 								</DropdownMenuItem>
 								<DropdownMenuItem asChild>
-									<form action={logout} className="w-full">
+									<form
+										action={handleLogout}
+										className="w-full"
+									>
 										<button
 											type="submit"
 											className="flex w-full items-center"
