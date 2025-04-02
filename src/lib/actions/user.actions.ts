@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { createClient } from "utils/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 
 // Helper function to validate email and password
 function validateCredentials(email: unknown, password: unknown) {
