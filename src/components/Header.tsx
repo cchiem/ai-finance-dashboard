@@ -11,6 +11,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { logout } from "@/lib/actions/user.actions";
+import { AkahuLoginButton } from "./AkahuButton";
 
 type HeaderProps = {
 	user: UserType | null;
@@ -61,42 +62,50 @@ export default function Header({ user }: HeaderProps) {
 				{/* Auth Buttons - Desktop */}
 				<div className="flex items-center gap-4">
 					{user ? (
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button
-									variant="ghost"
-									size="sm"
-									className="gap-2"
-								>
-									<User size={16} />
-									{user.email
-										? user.email.split("@")[0]
-										: "Account"}
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="end">
-								<DropdownMenuItem asChild>
-									<Link href="/profile">Profile</Link>
-								</DropdownMenuItem>
-								<DropdownMenuItem asChild>
-									<Link href="/settings">Settings</Link>
-								</DropdownMenuItem>
-								<DropdownMenuItem asChild>
-									<form
-										action={handleLogout}
-										className="w-full"
+						<>
+							{user.email && user.akahuToken ? (
+								<div>Bank Account Connected</div>
+							) : (
+								<AkahuLoginButton userEmail={user.email} />
+							)}
+
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild>
+									<Button
+										variant="ghost"
+										size="sm"
+										className="gap-2"
 									>
-										<button
-											type="submit"
-											className="flex w-full items-center"
+										<User size={16} />
+										{user.email
+											? user.email.split("@")[0]
+											: "Account"}
+									</Button>
+								</DropdownMenuTrigger>
+								<DropdownMenuContent align="end">
+									<DropdownMenuItem asChild>
+										<Link href="/profile">Profile</Link>
+									</DropdownMenuItem>
+									<DropdownMenuItem asChild>
+										<Link href="/settings">Settings</Link>
+									</DropdownMenuItem>
+									<DropdownMenuItem asChild>
+										<form
+											action={handleLogout}
+											className="w-full"
 										>
-											<LogOut className="mr-2 h-4 w-4" />
-											<span>Logout</span>
-										</button>
-									</form>
-								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
+											<button
+												type="submit"
+												className="flex w-full items-center"
+											>
+												<LogOut className="mr-2 h-4 w-4" />
+												<span>Logout</span>
+											</button>
+										</form>
+									</DropdownMenuItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
+						</>
 					) : (
 						<>
 							<Link href="/login">
