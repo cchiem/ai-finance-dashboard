@@ -1,8 +1,7 @@
 "use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User, LogOut, PiggyBank } from "lucide-react";
+import { User, LogOut, PiggyBank, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -61,12 +60,17 @@ export default function Header({ user }: HeaderProps) {
 
 				{/* Auth Buttons - Desktop */}
 				<div className="flex items-center gap-4">
-					{user ? (
+					{user != null ? (
 						<>
-							{user.email && user.akahuToken ? (
-								<div>Bank Account Connected</div>
+							{user.akahu_token != null ? (
+								<div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-green-50 text-green-600">
+									<CheckCircle2 className="h-3.5 w-3.5" />
+									<span className="text-xs font-medium">
+										Bank Connected
+									</span>
+								</div>
 							) : (
-								<AkahuLoginButton userEmail={user.email} />
+								<AkahuLoginButton />
 							)}
 
 							<DropdownMenu>
@@ -77,9 +81,12 @@ export default function Header({ user }: HeaderProps) {
 										className="gap-2"
 									>
 										<User size={16} />
-										{user.email
-											? user.email.split("@")[0]
-											: "Account"}
+										{/* Check if user has email before trying to access it */}
+										<span>
+											{user.email
+												? user.email.split("@")[0]
+												: "Account"}
+										</span>
 									</Button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent align="end">

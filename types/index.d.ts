@@ -2,6 +2,6 @@ declare type UserType = {
 	id: string;
 	firstName?: string;
 	lastName?: string;
-	akahuToken?: string;
+	akahu_token?: string;
 	email?: string;
 };

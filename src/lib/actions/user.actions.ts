@@ -100,10 +100,26 @@ export async function logout() {
 
 export async function getLoggedInUser() {
 	const supabase = await createClient();
+
+	// Wait for the user to be fetched
 	const {
 		data: { user },
 	} = await supabase.auth.getUser();
 
-	if (!user) return null;
-	return user;
+	if (!user) {
+		return null;
+	}
+
+	// Fetch the profile using the user id
+	const { data, error } = await supabase
+		.from("profiles")
+		.select("*")
+		.eq("id", user.id) // Use the user.id from supabase.auth.user()
+		.single();
+
+	if (error) {
+		throw new Error(error.message);
+	}
+
+	return data;
 }

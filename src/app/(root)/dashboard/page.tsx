@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import DashboardView from "./dashboard-view";
-import { createClient } from "@/lib/supabase/client";
 import { getLoggedInUser } from "@/lib/actions/user.actions";
 
 // Mock data for demonstration
@@ -61,6 +60,7 @@ const mockTransactions = [
 export default async function Dashboard() {
 	const user = await getLoggedInUser();
 	// Using mock data instead of fetching from database
+	if (!user) redirect("/login");
 	return (
 		<DashboardView
 			user={user}

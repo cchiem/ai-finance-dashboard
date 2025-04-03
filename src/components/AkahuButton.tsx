@@ -12,7 +12,7 @@ const akahu = new AkahuClient({
 	appToken: process.env.NEXT_PUBLIC_AKAHU_APP_TOKEN,
 });
 
-export function AkahuLoginButton(userEmail: string | null) {
+export function AkahuLoginButton() {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleLogin = async () => {
@@ -20,7 +20,7 @@ export function AkahuLoginButton(userEmail: string | null) {
 		try {
 			const authUrl = akahu.auth.buildAuthorizationUrl({
 				redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback/akahu`,
-				email: userEmail || "", // You can prefill this if you have the user's email
+				email: "", // You can prefill this if you have the user's email
 			});
 			window.location.href = authUrl;
 		} catch (error) {
