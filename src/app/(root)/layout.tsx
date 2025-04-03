@@ -14,11 +14,9 @@ export default async function RootLayout({
 		<main className="min-h-screen min-w-screen bg-background">
 			<div className="relative flex min-h-screen flex-col">
 				<Header user={loggedIn} />
-				<main className="flex-1">
-					<Toaster richColors />
-					<div className="">{children}</div>
-				</main>
+				{children}
 				<Footer />
+				<Toaster richColors />
 			</div>
 		</main>
 	);
