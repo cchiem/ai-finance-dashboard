@@ -12,15 +12,14 @@ const akahu = new AkahuClient({
 	appToken: process.env.NEXT_PUBLIC_AKAHU_APP_TOKEN,
 });
 
-export function AkahuLoginButton() {
+export function AkahuLoginButton({ userEmail }: { userEmail: string }) {
 	const [isLoading, setIsLoading] = useState(false);
-
 	const handleLogin = async () => {
 		setIsLoading(true);
 		try {
 			const authUrl = akahu.auth.buildAuthorizationUrl({
 				redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback/akahu`,
-				email: "", // You can prefill this if you have the user's email
+				email: userEmail, // You can prefill this if you have the user's email
 			});
 			window.location.href = authUrl;
 		} catch (error) {
@@ -32,7 +31,7 @@ export function AkahuLoginButton() {
 
 	return (
 		<Button onClick={handleLogin} disabled={isLoading}>
-			{isLoading ? "Loading..." : "Login with Akahu"}
+			{isLoading ? "Loading..." : "Connect Bank"}
 		</Button>
 	);
 }

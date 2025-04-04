@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { logout } from "@/lib/actions/user.actions";
 import { AkahuLoginButton } from "./AkahuButton";
+import { toast } from "sonner";
 
 type HeaderProps = {
 	user: UserType | null;
@@ -20,7 +21,12 @@ export default function Header({ user }: HeaderProps) {
 	const pathname = usePathname();
 
 	const handleLogout = async () => {
-		await logout();
+		const { success, message } = await logout();
+		if (success) {
+			toast.success(message);
+		} else {
+			toast.error(`Error: ${message}`);
+		}
 	};
 
 	const navItems = [
@@ -70,7 +76,7 @@ export default function Header({ user }: HeaderProps) {
 									</span>
 								</div>
 							) : (
-								<AkahuLoginButton />
+								<AkahuLoginButton userEmail={user.email} />
 							)}
 
 							<DropdownMenu>

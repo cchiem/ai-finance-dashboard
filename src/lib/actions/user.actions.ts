@@ -36,8 +36,9 @@ export async function login(formData: FormData) {
 	});
 
 	if (error) {
-		console.error(error.message);
-		return { success: false, message: "Failed to Log In" };
+		console.log(error);
+		if (error.code === "invalid_credentials")
+			return { success: false, message: "Invalid login credentials" };
 	}
 
 	return { success: true, message: "Sucessfully Logged In" };
@@ -52,7 +53,7 @@ export async function signup(formData: FormData) {
 	const validationError = validateCredentials(email, password);
 	if (validationError) {
 		console.error(validationError);
-		redirect("/error");
+		return { success: false, message: validationError };
 	}
 
 	const { error } = await supabase.auth.signUp({
@@ -61,10 +62,18 @@ export async function signup(formData: FormData) {
 	});
 
 	if (error) {
-		return { success: false, message: "Failed to Sign In" };
+		console.log(error);
+		if (error.code === "user_already_exists") {
+			return {
+				success: false,
+				message: "This email is already registered. Please log in.",
+			};
+		}
+		console.error(error);
+		return { success: false, message: "Failed to Sign Up" };
 	}
 
-	return { success: true, message: "Sucessfully Signed Up" };
+	return { success: true, message: "Successfully Signed Up" };
 }
 
 export async function signInWithGoogle() {
@@ -73,13 +82,13 @@ export async function signInWithGoogle() {
 	const { error } = await supabase.auth.signInWithOAuth({
 		provider: "google",
 		options: {
-			redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+			redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
 		},
 	});
 
 	if (error) {
-		console.error(error.message);
-		return { success: false, message: "Failed to Sign In with Google" };
+		console.log(error);
+		return { success: false, message: error.code };
 	}
 
 	return { success: true, message: "Sucessfully Signed In with Google" };

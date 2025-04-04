@@ -16,8 +16,8 @@ export default async function RootLayout({
 				<Header user={loggedIn} />
 				{children}
 				<Footer />
-				<Toaster richColors />
 			</div>
+			<Toaster richColors />
 		</main>
 	);
 }

@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 
@@ -33,6 +32,10 @@ interface Account {
 	balance: number;
 	account_number: string;
 	account_type: string;
+}
+
+interface UserType {
+	email: string | null | undefined;
 }
 
 interface DashboardViewProps {
@@ -228,6 +231,69 @@ export default function DashboardView({
 									</Progress>
 								</div>
 							</CardContent>
+						</Card>
+						<Card className="md:col-span-2 lg:col-span-3">
+							<CardHeader>
+								<CardTitle>About Akahu</CardTitle>
+							</CardHeader>
+							<CardContent>
+								<div className="space-y-4">
+									<p>
+										Akahu provides a simple way to connect
+										your financial accounts to services like
+										Horizon Finance.
+									</p>
+									<p>
+										Akahu is built in New Zealand, backed by
+										Westpac, and used by a broad range of
+										Government, corporate, and fintech
+										services.
+									</p>
+
+									<div>
+										<h3 className="font-semibold mb-2">
+											How it works
+										</h3>
+										<p>
+											Through Akahu, you can provide
+											Horizon Finance with access to your
+											selected financial accounts.
+										</p>
+										<p className="mt-1">
+											The access available to Horizon
+											Finance will be limited to the
+											specific permissions that you
+											approve.
+										</p>
+									</div>
+
+									<div>
+										<h3 className="font-semibold mb-2">
+											Privacy and security
+										</h3>
+										<p>
+											Your data is shared with Horizon
+											Finance. We do not sell your data to
+											other parties. If you grant ongoing
+											access, you can revoke that access
+											at any time.
+										</p>
+										<p className="mt-1">
+											We treat your data with the same
+											care as our own. Our systems are
+											secured using modern cloud services,
+											strong AES-256 encryption, and our
+											ISO 27001 certified security
+											program.
+										</p>
+									</div>
+								</div>
+							</CardContent>
+							<CardFooter className="border-t pt-4">
+								<Button className="w-full">
+									Connect Your Accounts with Akahu
+								</Button>
+							</CardFooter>
 						</Card>
 					</div>
 

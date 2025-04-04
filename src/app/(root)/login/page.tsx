@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -14,19 +15,23 @@ import { Separator } from "@/components/ui/separator";
 import { login, signInWithGoogle, signup } from "@/lib/actions/user.actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { SubmitButton } from "@/components/SubmitButton";
 
 export default function LoginPage() {
-	const router = useRouter(); // Add this
+	const router = useRouter();
 
 	const handleLogin = async (formdata: FormData) => {
 		try {
-			console.log("Loggin In");
 			const { success, message } = await login(formdata);
 			if (!success) throw new Error(message);
-			toast.success("Success");
-			router.push("/dashboard"); // Use router.push instead of redirect
-		} catch (e) {
-			console.log(e);
+			toast.success(message);
+			router.push("/dashboard");
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				toast.error(`Error: ${err.message}`);
+			} else {
+				toast.error("An unknown error occurred.");
+			}
 		}
 	};
 
@@ -34,10 +39,14 @@ export default function LoginPage() {
 		try {
 			const { success, message } = await signup(formdata);
 			if (!success) throw new Error(message);
-			toast.success("Success");
-			router.push("/login"); // Use router.push instead of redirect
-		} catch (e) {
-			console.log(e);
+			toast.success(message);
+			router.push("/dashboard");
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				toast.error(`Error: ${err.message}`);
+			} else {
+				toast.error("An unknown error occurred.");
+			}
 		}
 	};
 
@@ -45,9 +54,14 @@ export default function LoginPage() {
 		try {
 			const { success, message } = await signInWithGoogle();
 			if (!success) throw new Error(message);
-			router.push("/dashboard"); // Use router.push instead of redirect
-		} catch (e) {
-			console.log(e);
+			toast.success(message);
+			router.push("/dashboard");
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				toast.error(`Error: ${err.message}`);
+			} else {
+				toast.error("An unknown error occurred.");
+			}
 		}
 	};
 
@@ -70,7 +84,7 @@ export default function LoginPage() {
 						</TabsList>
 
 						<TabsContent value="login">
-							<form className="space-y-4">
+							<form className="space-y-4" action={handleLogin}>
 								<div className="space-y-2">
 									<Label htmlFor="email-login">Email</Label>
 									<Input
@@ -92,18 +106,12 @@ export default function LoginPage() {
 										required
 									/>
 								</div>
-								<Button
-									type="submit"
-									className="w-full"
-									formAction={handleLogin}
-								>
-									Login
-								</Button>
+								<SubmitButton text="Login" />
 							</form>
 						</TabsContent>
 
 						<TabsContent value="signup">
-							<form className="space-y-4">
+							<form className="space-y-4" action={handleSignUp}>
 								<div className="space-y-2">
 									<Label htmlFor="email-signup">Email</Label>
 									<Input
@@ -125,13 +133,7 @@ export default function LoginPage() {
 										required
 									/>
 								</div>
-								<Button
-									type="submit"
-									className="w-full"
-									formAction={handleSignUp}
-								>
-									Create account
-								</Button>
+								<SubmitButton text="Create account" />
 							</form>
 						</TabsContent>
 					</Tabs>

@@ -3,5 +3,5 @@ declare type UserType = {
 	firstName?: string;
 	lastName?: string;
 	akahu_token?: string;
-	email?: string;
+	email: string;
 };
